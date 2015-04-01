@@ -1,16 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <syncparticipants>
-<participant displayName="Git (webCrawler)" id="org.eclipse.egit.ui.modelCompareParticipant" secondary_id="1427799979046">
+<participant displayName="Git (webCrawler, webCrawler)" id="org.eclipse.egit.ui.modelCompareParticipant" secondary_id="1427866710006">
 <data forceFetch="false" root="false">
-<org.eclipse.team.ui.MODEL_PARTICIPANT_SETTINGS org.eclipse.team.ui.MODEL_PARTICIPANT_DESCRIPTION="webCrawler" startupAction="none">
+<org.eclipse.team.ui.MODEL_PARTICIPANT_SETTINGS org.eclipse.team.ui.MODEL_PARTICIPANT_DESCRIPTION="webCrawler, webCrawler" startupAction="none">
 <org.eclipse.team.ui.MODEL_PARTICIPANT_REFRESH_SCHEDULE org.eclipse.team.ui.CTX_REFRESHSCHEDULE_ENABLED="false" org.eclipse.team.ui.CTX_REFRESHSCHEDULE_INTERVAL="3600" org.eclipse.team.ui.CTX_REFRESHSCHEDULE_RUNONCE="false"/>
+<org.eclipse.team.ui.MODEL_PARTICIPANT_MAPPINGS modelProviderId="org.eclipse.jdt.ui.modelProvider">
+<mappings>
+<resources resourcePath="/webCrawler" resourceType="4"/>
+</mappings>
+</org.eclipse.team.ui.MODEL_PARTICIPANT_MAPPINGS>
 <org.eclipse.team.ui.MODEL_PARTICIPANT_MAPPINGS modelProviderId="org.eclipse.core.resources.modelProvider">
 <mappings>
 <resources resourcePath="/webCrawler" resourceType="4"/>
 </mappings>
 </org.eclipse.team.ui.MODEL_PARTICIPANT_MAPPINGS>
 </org.eclipse.team.ui.MODEL_PARTICIPANT_SETTINGS>
-<gitSynchronizeData container="/home/ramakrishnas/workspace/Test" dstRev="HEAD" inludeLocal="true" srcRev="HEAD"/>
+<gitSynchronizeData container="/home/ramakrishnas/workspace/Test" dstRev="HEAD" inludeLocal="true" srcRev="HEAD">
+<includedPaths>
+<path path="/home/ramakrishnas/workspace/webCrawler"/>
+</includedPaths>
+</gitSynchronizeData>
 </data>
 </participant>
 </syncparticipants>

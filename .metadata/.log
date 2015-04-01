@@ -786,3 +786,105 @@ org.eclipse.jgit.errors.TransportException: Nothing to push.
 
 !ENTRY org.eclipse.egit.ui 4 0 2015-04-01 10:51:20.056
 !MESSAGE Can't connect to any repository: git@github.com:RamaPramati/WebCrawler.git (Nothing to push.)
+
+!ENTRY org.eclipse.egit.core 4 0 2015-04-01 10:57:32.229
+!MESSAGE An exception occurred during push on URI git@github.com:RamaPramati/WebCrawler.git: git@github.com:RamaPramati/WebCrawler.git: Auth fail
+!STACK 0
+org.eclipse.jgit.errors.TransportException: git@github.com:RamaPramati/WebCrawler.git: Auth fail
+	at org.eclipse.jgit.transport.JschConfigSessionFactory.getSession(JschConfigSessionFactory.java:159)
+	at org.eclipse.jgit.transport.SshTransport.getSession(SshTransport.java:136)
+	at org.eclipse.jgit.transport.TransportGitSsh$SshPushConnection.<init>(TransportGitSsh.java:320)
+	at org.eclipse.jgit.transport.TransportGitSsh.openPush(TransportGitSsh.java:166)
+	at org.eclipse.jgit.transport.PushProcess.execute(PushProcess.java:154)
+	at org.eclipse.jgit.transport.Transport.push(Transport.java:1200)
+	at org.eclipse.egit.core.op.PushOperation.run(PushOperation.java:197)
+	at org.eclipse.egit.ui.internal.push.ConfirmationPage$2.run(ConfirmationPage.java:206)
+	at org.eclipse.jface.operation.ModalContext$ModalContextThread.run(ModalContext.java:121)
+Caused by: com.jcraft.jsch.JSchException: Auth fail
+	at com.jcraft.jsch.Session.connect(Session.java:512)
+	at org.eclipse.jgit.transport.JschConfigSessionFactory.getSession(JschConfigSessionFactory.java:116)
+	... 8 more
+
+!ENTRY org.eclipse.egit.core 4 0 2015-04-01 10:57:59.609
+!MESSAGE An exception occurred during push on URI git@github.com:RamaPramati/WebCrawler.git: git@github.com:RamaPramati/WebCrawler.git: Auth fail
+!STACK 0
+org.eclipse.jgit.errors.TransportException: git@github.com:RamaPramati/WebCrawler.git: Auth fail
+	at org.eclipse.jgit.transport.JschConfigSessionFactory.getSession(JschConfigSessionFactory.java:159)
+	at org.eclipse.jgit.transport.SshTransport.getSession(SshTransport.java:136)
+	at org.eclipse.jgit.transport.TransportGitSsh$SshPushConnection.<init>(TransportGitSsh.java:320)
+	at org.eclipse.jgit.transport.TransportGitSsh.openPush(TransportGitSsh.java:166)
+	at org.eclipse.jgit.transport.PushProcess.execute(PushProcess.java:154)
+	at org.eclipse.jgit.transport.Transport.push(Transport.java:1200)
+	at org.eclipse.egit.core.op.PushOperation.run(PushOperation.java:197)
+	at org.eclipse.egit.ui.internal.push.ConfirmationPage$2.run(ConfirmationPage.java:206)
+	at org.eclipse.jface.operation.ModalContext$ModalContextThread.run(ModalContext.java:121)
+Caused by: com.jcraft.jsch.JSchException: Auth fail
+	at com.jcraft.jsch.Session.connect(Session.java:512)
+	at org.eclipse.jgit.transport.JschConfigSessionFactory.getSession(JschConfigSessionFactory.java:116)
+	... 8 more
+
+!ENTRY org.eclipse.egit.core 4 0 2015-04-01 11:03:27.029
+!MESSAGE An exception occurred during push on URI https://github.com/RamaPramati/WebCrawler.git: https://github.com/RamaPramati/WebCrawler.git: Packing cancelled during objects writing
+!STACK 0
+org.eclipse.jgit.errors.TransportException: https://github.com/RamaPramati/WebCrawler.git: Packing cancelled during objects writing
+	at org.eclipse.jgit.transport.BasePackPushConnection.doPush(BasePackPushConnection.java:217)
+	at org.eclipse.jgit.transport.TransportHttp$SmartHttpPushConnection.doPush(TransportHttp.java:811)
+	at org.eclipse.jgit.transport.BasePackPushConnection.push(BasePackPushConnection.java:152)
+	at org.eclipse.jgit.transport.PushProcess.execute(PushProcess.java:165)
+	at org.eclipse.jgit.transport.Transport.push(Transport.java:1200)
+	at org.eclipse.egit.core.op.PushOperation.run(PushOperation.java:197)
+	at org.eclipse.egit.ui.internal.push.PushWizard$PushJob.run(PushWizard.java:297)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:54)
+Caused by: java.io.IOException: Packing cancelled during objects writing
+	at org.eclipse.jgit.internal.storage.pack.PackOutputStream.write(PackOutputStream.java:120)
+	at java.util.zip.DeflaterOutputStream.deflate(DeflaterOutputStream.java:253)
+	at java.util.zip.DeflaterOutputStream.write(DeflaterOutputStream.java:211)
+	at org.eclipse.jgit.lib.ObjectLoader.copyTo(ObjectLoader.java:257)
+	at org.eclipse.jgit.internal.storage.pack.PackWriter.writeWholeObjectDeflate(PackWriter.java:1571)
+	at org.eclipse.jgit.internal.storage.pack.PackWriter.writeObjectImpl(PackWriter.java:1549)
+	at org.eclipse.jgit.internal.storage.pack.PackWriter.writeObject(PackWriter.java:1492)
+	at org.eclipse.jgit.internal.storage.pack.PackOutputStream.writeObject(PackOutputStream.java:164)
+	at org.eclipse.jgit.internal.storage.file.WindowCursor.writeObjects(WindowCursor.java:196)
+	at org.eclipse.jgit.internal.storage.pack.PackWriter.writeObjects(PackWriter.java:1480)
+	at org.eclipse.jgit.internal.storage.pack.PackWriter.writeObjects(PackWriter.java:1468)
+	at org.eclipse.jgit.internal.storage.pack.PackWriter.writePack(PackWriter.java:1036)
+	at org.eclipse.jgit.transport.BasePackPushConnection.writePack(BasePackPushConnection.java:305)
+	at org.eclipse.jgit.transport.BasePackPushConnection.doPush(BasePackPushConnection.java:197)
+	... 7 more
+
+!ENTRY org.eclipse.egit.ui 4 0 2015-04-01 11:03:27.036
+!MESSAGE Can't connect to any repository: https://github.com/RamaPramati/WebCrawler.git (https://github.com/RamaPramati/WebCrawler.git: Packing cancelled during objects writing)
+
+!ENTRY org.eclipse.egit.core 4 0 2015-04-01 11:07:55.311
+!MESSAGE An exception occurred during push on URI https://github.com/RamaPramati/WebCrawler.git: https://github.com/RamaPramati/WebCrawler.git: Packing cancelled during objects writing
+!STACK 0
+org.eclipse.jgit.api.errors.TransportException: https://github.com/RamaPramati/WebCrawler.git: Packing cancelled during objects writing
+	at org.eclipse.jgit.api.PushCommand.call(PushCommand.java:160)
+	at org.eclipse.egit.core.op.PushOperation.run(PushOperation.java:228)
+	at org.eclipse.egit.ui.internal.push.PushOperationUI.execute(PushOperationUI.java:167)
+	at org.eclipse.egit.ui.internal.push.PushOperationUI$1.run(PushOperationUI.java:229)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:54)
+Caused by: org.eclipse.jgit.errors.TransportException: https://github.com/RamaPramati/WebCrawler.git: Packing cancelled during objects writing
+	at org.eclipse.jgit.transport.BasePackPushConnection.doPush(BasePackPushConnection.java:217)
+	at org.eclipse.jgit.transport.TransportHttp$SmartHttpPushConnection.doPush(TransportHttp.java:811)
+	at org.eclipse.jgit.transport.BasePackPushConnection.push(BasePackPushConnection.java:152)
+	at org.eclipse.jgit.transport.PushProcess.execute(PushProcess.java:165)
+	at org.eclipse.jgit.transport.Transport.push(Transport.java:1200)
+	at org.eclipse.jgit.api.PushCommand.call(PushCommand.java:156)
+	... 4 more
+Caused by: java.io.IOException: Packing cancelled during objects writing
+	at org.eclipse.jgit.internal.storage.pack.PackOutputStream.write(PackOutputStream.java:120)
+	at java.util.zip.DeflaterOutputStream.deflate(DeflaterOutputStream.java:253)
+	at java.util.zip.DeflaterOutputStream.write(DeflaterOutputStream.java:211)
+	at org.eclipse.jgit.lib.ObjectLoader.copyTo(ObjectLoader.java:257)
+	at org.eclipse.jgit.internal.storage.pack.PackWriter.writeWholeObjectDeflate(PackWriter.java:1571)
+	at org.eclipse.jgit.internal.storage.pack.PackWriter.writeObjectImpl(PackWriter.java:1549)
+	at org.eclipse.jgit.internal.storage.pack.PackWriter.writeObject(PackWriter.java:1492)
+	at org.eclipse.jgit.internal.storage.pack.PackOutputStream.writeObject(PackOutputStream.java:164)
+	at org.eclipse.jgit.internal.storage.file.WindowCursor.writeObjects(WindowCursor.java:196)
+	at org.eclipse.jgit.internal.storage.pack.PackWriter.writeObjects(PackWriter.java:1480)
+	at org.eclipse.jgit.internal.storage.pack.PackWriter.writeObjects(PackWriter.java:1468)
+	at org.eclipse.jgit.internal.storage.pack.PackWriter.writePack(PackWriter.java:1036)
+	at org.eclipse.jgit.transport.BasePackPushConnection.writePack(BasePackPushConnection.java:305)
+	at org.eclipse.jgit.transport.BasePackPushConnection.doPush(BasePackPushConnection.java:197)
+	... 9 more
