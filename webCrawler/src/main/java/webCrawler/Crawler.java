@@ -1,4 +1,4 @@
-package Crawler;
+package webCrawler;
 
 public class Crawler {
 
