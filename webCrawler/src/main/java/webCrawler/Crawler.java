@@ -11,6 +11,7 @@ import java.util.Iterator;
 import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 import com.gargoylesoftware.htmlunit.NicelyResynchronizingAjaxController;
+import com.gargoylesoftware.htmlunit.TextPage;
 import com.gargoylesoftware.htmlunit.ThreadedRefreshHandler;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
@@ -33,16 +34,15 @@ public class Crawler
 		webClient.waitForBackgroundJavaScriptStartingBefore(10000);
 		webClient.setJavaScriptTimeout(1000000);
 		webClient.waitForBackgroundJavaScript(5000);
-		webClient.setRefreshHandler(new ThreadedRefreshHandler());
 	}
 	public static void main(String args[]) throws FailingHttpStatusCodeException, MalformedURLException, IOException
 	{
 	
         HtmlPage currentPage=webClient.getPage("http://mail-archives.apache.org/mod_mbox/maven-users/");
 		
-		java.util.List<?> target_div = currentPage.getByXPath("//a[@href]");
+		java.util.List<?> targerURLs = currentPage.getByXPath("//a[@href]");
 		URL expandURL=new URL("http://mail-archives.apache.org/mod_mbox/maven-users/");
-		Iterator ir=target_div.iterator();
+		Iterator ir=targerURLs.iterator();
         while(ir.hasNext())
         {
         String element=ir.next().toString();
@@ -68,21 +68,27 @@ public class Crawler
         urlMonthly.getChars(0, url.toString().lastIndexOf('/')+4, dst1, 0);
         StringBuilder stringUrl=new StringBuilder().append(dst1);
        
-        stringUrl.replace(stringUrl.lastIndexOf("/")+1, stringUrl.lastIndexOf("/")+4, "ajax/");
+        stringUrl.replace(stringUrl.lastIndexOf("/")+1, stringUrl.lastIndexOf("/")+4, "raw/");
        
         URL xmlURL=new URL(stringUrl.toString());	
-        java.util.List<?> target_div = currentPage.getByXPath("//a[@onclick and @href != 'browser']");
+        java.util.List<?> targetXMLURL = currentPage.getByXPath("//a[@onclick and @href != 'browser']");
        
-		Iterator ir=target_div.iterator();
-        while(ir.hasNext())
+		Iterator ir=targetXMLURL.iterator();
+		
+		int count=1;
+		
+		while(ir.hasNext())
         {
         String element=ir.next().toString();
 	    char dst[]=new char[100];
 		element.getChars(element.indexOf("%3C")+3, element.indexOf("%3E")+1, dst, 0);
 		StringBuilder tempString=new StringBuilder().append('<').append(dst);
 		tempString.setCharAt(tempString.lastIndexOf("%"), '>');
-		XmlPage currentPage1=webClient.getPage(WebClient.expandUrl(xmlURL,tempString.toString()));
-		output.write(currentPage1.asXml());
+		TextPage currentPage1=webClient.getPage(WebClient.expandUrl(xmlURL,tempString.toString()));
+		
+		output.write("************\n   mail "+count+"\n************\n");
+		count++;
+		output.write(currentPage1.getContent());
         }
         output.close();		
 	}
