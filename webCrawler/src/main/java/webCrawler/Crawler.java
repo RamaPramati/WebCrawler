@@ -11,11 +11,9 @@ import java.util.Iterator;
 import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 import com.gargoylesoftware.htmlunit.NicelyResynchronizingAjaxController;
-import com.gargoylesoftware.htmlunit.TextPage;
-import com.gargoylesoftware.htmlunit.ThreadedRefreshHandler;
+import com.gargoylesoftware.htmlunit.UnexpectedPage;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
-import com.gargoylesoftware.htmlunit.xml.XmlPage;
 
 public class Crawler
 {
@@ -48,9 +46,9 @@ public class Crawler
         String element=ir.next().toString();
 	    char dst[]=new char[20];
 		if(element.contains("2014")){
-		element.getChars(20, 39, dst, 0);
-		String tempString=new String(dst);
-		saveToFile(WebClient.expandUrl(expandURL,tempString).toString());
+		element.getChars(20, 31, dst, 0);
+		StringBuilder tempString=new StringBuilder().append(dst);
+		saveToFile(WebClient.expandUrl(expandURL,tempString.toString()).toString());
 		}
 	}
 	}	
@@ -58,47 +56,14 @@ public class Crawler
 	{
 		
 		File file = new File(urlMonthly.substring(53, 59)+".txt");
-        BufferedWriter output = new BufferedWriter(new FileWriter(file));	
-       
+        BufferedWriter output = new BufferedWriter(new FileWriter(file));
+        
         URL url=new URL(urlMonthly);
-        HtmlPage currentPage=webClient.getPage(url);
-		
-      
-        char dst1[]=new char[100];
-        urlMonthly.getChars(0, url.toString().lastIndexOf('/')+4, dst1, 0);
-        StringBuilder stringUrl=new StringBuilder().append(dst1);
-       
-        stringUrl.replace(stringUrl.lastIndexOf("/")+1, stringUrl.lastIndexOf("/")+4, "raw/");
-       
-        URL xmlURL=new URL(stringUrl.toString());	
-        java.util.List<?> targetXMLURL = currentPage.getByXPath("//a[@onclick and @href != 'browser']");
-       
-		Iterator ir=targetXMLURL.iterator();
-		
-		int count=1;
-		
-		while(ir.hasNext())
-        {
-        String element=ir.next().toString();
-	    char dst[]=new char[100];
-		element.getChars(element.indexOf("%3C")+3, element.indexOf("%3E")+1, dst, 0);
-		StringBuilder tempString=new StringBuilder().append('<').append(dst);
-		tempString.setCharAt(tempString.lastIndexOf("%"), '>');
-		TextPage currentPage1=webClient.getPage(WebClient.expandUrl(xmlURL,tempString.toString()));
-		
-		output.write("************\n   mail "+count+"\n************\n");
-		count++;
-		output.write(currentPage1.getContent());
-        }
+              
+        UnexpectedPage rbc= webClient.getPage(url);
+        
+        output.write(rbc.getWebResponse().getContentAsString());
+        
         output.close();		
 	}
 }
-	 
- 
-        
- 
-
- 
-
-
-
