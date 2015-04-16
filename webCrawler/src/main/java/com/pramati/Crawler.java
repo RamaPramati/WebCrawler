@@ -5,7 +5,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Iterator;
 
-import com.crawling.Storable;
+import com.crawling.Storing;
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
@@ -16,7 +16,7 @@ public class Crawler
 	static URL url;
 	String year;
 	
-	public Crawler(String url, String year) throws FailingHttpStatusCodeException, MalformedURLException, IOException
+	public Crawler(String url, String year) throws FailingHttpStatusCodeException, MalformedURLException
 	{
         this.year=year;
         Crawler.url=new URL(url);
@@ -37,7 +37,7 @@ public class Crawler
 		element.getChars(24, 26, month, 0);
 		StringBuilder month1=new StringBuilder().append(month);
 		URL storeURL=new URL(element);
-		Storable store=new FileSystem(storeURL,month1.toString());
+		Storing store=new FileSystem(storeURL,month1.toString());
 		store.start();
 	  }
 	}
