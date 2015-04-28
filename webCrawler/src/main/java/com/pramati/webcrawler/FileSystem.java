@@ -5,9 +5,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.logging.Logger;
 
 import com.pramati.crawling.Storing;
 import com.gargoylesoftware.htmlunit.TextPage;
@@ -19,11 +17,11 @@ public class FileSystem extends Client implements Storing, Runnable {
 	private String threadName;
 	private URL url;
     private static int count=1; 
-	static Logger LOGGER = LoggerFactory.getLogger(FileSystem.class);
+	Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
     
 	public FileSystem(URL url){
-		LOGGER.info("I am in Filesystem and received url as {}{}", url);
+		LOGGER.info("I am in Filesystem and received url as"+url);
 		this.url=url;
 		this.threadName=String.valueOf(count);
 	}
@@ -39,7 +37,7 @@ public class FileSystem extends Client implements Storing, Runnable {
 			output.close();
 		} 
 		catch (IOException e) {
-			LOGGER.error("I got exception",e);
+			LOGGER.severe("I got exception"+e);
 			e.printStackTrace();
 		}
 	}

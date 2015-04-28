@@ -6,9 +6,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.logging.Logger;
 
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 import com.gargoylesoftware.htmlunit.WebClient;
@@ -16,12 +14,12 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.pramati.crawling.MailParser;
 
 public class MailParserImpl extends Client implements MailParser {
-	private ArrayList<String> storeURLs;
-	private static Logger LOGGER = LoggerFactory.getLogger(MailParserImpl.class);
-
+	private ArrayList<String> storeURLs = new ArrayList<String>();
+	Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+	
 	public ArrayList<String> getMailURLs(URL url, String year) throws FailingHttpStatusCodeException, IOException
 	{
-		LOGGER.info("I am in MailParserImpl and received url and year as {}{}", url, year);
+		LOGGER.info("I am in MailParserImpl and received url and year as"+url+" "+year);
 		HtmlPage currentPage=webClient.getPage("http://mail-archives.apache.org/mod_mbox/maven-users/");
 		List<?> targerURLs = currentPage.getByXPath("//a[@href]");
 		Iterator<?> ir=targerURLs.iterator();
@@ -39,13 +37,13 @@ public class MailParserImpl extends Client implements MailParser {
 	}
 
 	private void parseForMailURLS(URL url){
-		LOGGER.info("I am in parsingMailURLS and parsing the url {}", url);
+		LOGGER.info("I am in parsingMailURLS and parsing the url "+url);
 		try {
 			HtmlPage tempPage;
 			tempPage = webClient.getPage(url);
 			int noOfPages = tempPage.getByXPath("//a[@onclick and @href = 'browser']").size()-3;
 			for(int i=0;i<noOfPages;i++){
-				LOGGER.info("There are total {} pages in url {}", noOfPages, url );
+				LOGGER.info("There are total pages in url" + url+" are"+ noOfPages);
 				tempPage = webClient.getPage(url.toString().replace("browser", "thread?"+i));
 				List<?> mailURLs = tempPage.getByXPath("//a[starts-with(@href, '%3c')]");
 				Iterator<?> ir = mailURLs.iterator();
@@ -56,10 +54,10 @@ public class MailParserImpl extends Client implements MailParser {
 			}
 		} 
 		catch (FailingHttpStatusCodeException e) {
-			LOGGER.error("I got exception",e);
+			LOGGER.severe("I got exception"+e);
 			e.printStackTrace();
 		} catch (IOException e) {
-			LOGGER.error("I got exception",e);
+			LOGGER.severe("I got exception"+e);
 			e.printStackTrace();
 		}
 	}
@@ -76,7 +74,7 @@ public class MailParserImpl extends Client implements MailParser {
 			char dst[]=new char[100];
 			mailURLIterator.getChars(mailURLIterator.indexOf("%3c"), mailURLIterator.indexOf("%3e")+3, dst, 0);
 			StringBuilder tempString=new StringBuilder().append(dst);
-			LOGGER.info("Found mail and the url is {}", WebClient.expandUrl(xmlURL,tempString.toString()).toString() );
+			LOGGER.info("Found mail and the url is "+WebClient.expandUrl(xmlURL,tempString.toString()).toString() );
 			constructedMailURL = WebClient.expandUrl(xmlURL,tempString.toString()).toString();
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
