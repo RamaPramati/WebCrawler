@@ -10,6 +10,8 @@ public class WebCrawler {
 	static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
 	public static void main(String args[]) throws MalformedURLException, IOException {
+		MyLogger.setup();
+
 		LOGGER.info("I am in WebCrawler and storing mails on url and year"+"http://mail-archives.apache.org/mod_mbox/maven-users/"+"2014");
 		MailParser condtion=new MailParserImpl();
 		Crawler crawler=new Crawler("http://mail-archives.apache.org/mod_mbox/maven-users/","2014",condtion);

@@ -8,7 +8,7 @@ import com.gargoylesoftware.htmlunit.WebClient;
 
 public class Client
 {
-    final static WebClient webClient=new WebClient(BrowserVersion.FIREFOX_24);;
+    final static WebClient webClient=new WebClient(BrowserVersion.FIREFOX_24);
 	static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 	
 	static {

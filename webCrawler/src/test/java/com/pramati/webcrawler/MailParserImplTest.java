@@ -8,7 +8,7 @@ import static org.junit.Assert.*;
 
 public class MailParserImplTest {
 	
-	@Test(expected = java.net.MalformedURLException.class)
+	@Test
 	public void getMailURLsTest()
 		throws Exception {
 		MailParserImpl fixture = new MailParserImpl();
@@ -17,7 +17,7 @@ public class MailParserImplTest {
 
 		ArrayList<String> result = fixture.getMailURLs(url, year);
 
-		assertEquals(result.size(), 3244);
+		assertEquals(3244, result.size());
 	}
 
 	public static void main(String[] args) {

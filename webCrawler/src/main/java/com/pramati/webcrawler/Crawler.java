@@ -21,21 +21,22 @@ public class Crawler
 	
 	public Crawler(String url, String year, MailParser condition) throws FailingHttpStatusCodeException, MalformedURLException {
 		LOGGER.info("I am in Crawler and received url and conditions as are"+url+"and"+condition);
-		this.year=year;
-		Crawler.url=new URL(url);
-		checkCondition=condition;
+		this.year = year;
+		Crawler.url = new URL(url);
+		checkCondition = condition;
 	}
 
 	public void crawlURL() throws MalformedURLException, IOException {
 		LOGGER.info("I am on crawURL");
 		ArrayList<String> storeURLs = checkCondition.getMailURLs(url, year);
 		Iterator<?> ir=storeURLs.iterator();
-		ExecutorService executor = Executors.newFixedThreadPool(8);
+		ExecutorService executor = Executors.newFixedThreadPool(3);
 		while(ir.hasNext()) {
-			LOGGER.info("I am on running thread for urlpage reading"+ir.next().toString());
-			URL storeURL = new URL(ir.next().toString());
+			String temp = ir.next().toString();
+			LOGGER.info("I am on running thread for urlpage reading"+temp);
+			URL storeURL = new URL(temp);
 			Storing store = new FileSystem(storeURL);
-			executor.execute((Runnable) store);//store.start();
+			executor.execute((Runnable) store);
 		}
 		executor.shutdown();  
 		while (!executor.isTerminated()) {   }  
