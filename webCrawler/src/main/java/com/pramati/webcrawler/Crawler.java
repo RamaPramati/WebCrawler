@@ -7,7 +7,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.logging.FileHandler;
 import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 import com.pramati.crawling.MailParser;
@@ -17,29 +19,40 @@ public class Crawler
 	private MailParser checkCondition;
 	private static URL url;
 	private String year;
-	Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+	
+	static final Logger LOGGER = Logger.getLogger(Crawler.class.getName());
+
+	public static void main(String args[]) throws MalformedURLException, IOException {
+		
+		FileHandler fileTxt = new FileHandler("log/webCrawler.log");
+		SimpleFormatter formatterTxt = new SimpleFormatter();
+		fileTxt.setFormatter(formatterTxt);
+		LOGGER.addHandler(fileTxt);
+		
+		final MailParser condtion=new MailParserImpl();
+		final Crawler crawler=new Crawler("http://mail-archives.apache.org/mod_mbox/maven-users/","2014",condtion);
+		crawler.crawlURL();
+		LOGGER.info("Crawling success");
+	}
 	
 	public Crawler(String url, String year, MailParser condition) throws FailingHttpStatusCodeException, MalformedURLException {
-		LOGGER.info("I am in Crawler and received url and conditions as are"+url+"and"+condition);
 		this.year = year;
 		Crawler.url = new URL(url);
 		checkCondition = condition;
 	}
 
 	public void crawlURL() throws MalformedURLException, IOException {
-		LOGGER.info("I am on crawURL");
 		ArrayList<String> storeURLs = checkCondition.getMailURLs(url, year);
 		Iterator<?> ir=storeURLs.iterator();
-		ExecutorService executor = Executors.newFixedThreadPool(3);
+		ExecutorService executor = Executors.newFixedThreadPool(8);
 		while(ir.hasNext()) {
 			String temp = ir.next().toString();
-			LOGGER.info("I am on running thread for urlpage reading"+temp);
 			URL storeURL = new URL(temp);
 			Storing store = new FileSystem(storeURL);
 			executor.execute((Runnable) store);
 		}
 		executor.shutdown();  
-		while (!executor.isTerminated()) {   }  
+		while (!executor.isTerminated()) {   }  	
 	}
 
 }
