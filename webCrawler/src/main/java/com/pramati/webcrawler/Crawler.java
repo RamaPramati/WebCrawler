@@ -37,9 +37,9 @@ public class Crawler
 				}
 			} 		
 			try {
-				final MailParser condtion=new MailParserImpl();
-				Crawler crawler;
-				crawler = new Crawler("http://mail-archives.apache.org/mod_mbox/maven-users/","2014",condtion);
+				MailParser condtion=new MailParserImpl();
+				url = new URL("http://mail-archives.apache.org/mod_mbox/maven-users/"); 
+				Crawler crawler = new Crawler(url,"2014",condtion);
 				crawler.crawlURL();
 			} catch (FailingHttpStatusCodeException e) {
 				if (LOGGER.isLoggable(Level.INFO)){
@@ -59,9 +59,8 @@ public class Crawler
 		LOGGER.info("Crawling success");
 	}
 	
-	public Crawler(String url, String year, MailParser condition) throws FailingHttpStatusCodeException, MalformedURLException {
+	public Crawler(URL url, String year, MailParser condition) throws FailingHttpStatusCodeException, MalformedURLException {
 		this.year = year;
-		Crawler.url = new URL(url);
 		checkCondition = condition;
 	}
 
