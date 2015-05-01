@@ -7,11 +7,11 @@ import com.pramati.crawling.Storing;
 
 public class Db implements Storing{
 
-	public void run() throws IOException {
+	/*public void run() throws IOException {
 		
 	}
 
 	public void start() {
 		
-	}
+	}*/
 }

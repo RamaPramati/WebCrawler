@@ -4,7 +4,7 @@ import java.io.IOException;
 
 public interface Storing {
 
-	public abstract void run() throws IOException;
+	 void run() throws IOException;
 
-	public abstract void start();
+	 void start();
 }

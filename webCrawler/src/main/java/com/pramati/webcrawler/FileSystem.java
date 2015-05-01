@@ -16,7 +16,7 @@ public class FileSystem extends Client implements Storing, Runnable {
 	private String threadName;
 	private URL url;
     private static int count=1; 
-	static final Logger LOGGER = Logger.getLogger(FileSystem.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(FileSystem.class.getName());
     
 	public FileSystem(URL url){
 		super();
@@ -29,7 +29,7 @@ public class FileSystem extends Client implements Storing, Runnable {
 		BufferedWriter output;
 		try {
 			output = new BufferedWriter(new FileWriter(file));
-			final TextPage rbc= webClient.getPage(url);
+			final TextPage rbc= WEBCLIENT.getPage(url);
 			output.write(rbc.getWebResponse().getContentAsString());
 			count++;
 			output.close();

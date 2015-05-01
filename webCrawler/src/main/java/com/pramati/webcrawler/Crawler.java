@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.FileHandler;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
@@ -18,20 +19,43 @@ public class Crawler
 {
 	private MailParser checkCondition;
 	private static URL url;
-	private String year;
+	private final String year;
 	
-	static final Logger LOGGER = Logger.getLogger(Crawler.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(Crawler.class.getName());
 
-	public static void main(String args[]) throws MalformedURLException, IOException {
-		
-		FileHandler fileTxt = new FileHandler("log/webCrawler.log");
-		SimpleFormatter formatterTxt = new SimpleFormatter();
-		fileTxt.setFormatter(formatterTxt);
-		LOGGER.addHandler(fileTxt);
-		
-		final MailParser condtion=new MailParserImpl();
-		final Crawler crawler=new Crawler("http://mail-archives.apache.org/mod_mbox/maven-users/","2014",condtion);
-		crawler.crawlURL();
+	public static void main(String args[]){
+		try{
+			try {
+				FileHandler fileTxt;
+				fileTxt = new FileHandler("log/webCrawler.log");
+				SimpleFormatter formatterTxt = new SimpleFormatter();
+				fileTxt.setFormatter(formatterTxt);
+				LOGGER.addHandler(fileTxt);
+			} catch (SecurityException e) {
+				if (LOGGER.isLoggable(Level.INFO)){
+					LOGGER.severe(e.toString());
+				}
+			} 		
+			try {
+				final MailParser condtion=new MailParserImpl();
+				Crawler crawler;
+				crawler = new Crawler("http://mail-archives.apache.org/mod_mbox/maven-users/","2014",condtion);
+				crawler.crawlURL();
+			} catch (FailingHttpStatusCodeException e) {
+				if (LOGGER.isLoggable(Level.INFO)){
+					LOGGER.severe(e.toString());
+				}
+			} catch (MalformedURLException e) {
+				if (LOGGER.isLoggable(Level.INFO)){
+					LOGGER.severe(e.toString());
+				}
+			}
+		}
+		catch (IOException e) {
+			if (LOGGER.isLoggable(Level.INFO)){
+				LOGGER.severe(e.toString());
+			}
+		}
 		LOGGER.info("Crawling success");
 	}
 	
@@ -43,19 +67,25 @@ public class Crawler
 
 	public void crawlURL() throws MalformedURLException, IOException {
 		ArrayList<String> storeURLs = checkCondition.getMailURLs(url, year);
-		Iterator<?> ir=storeURLs.iterator();
+		Iterator<String> storeURLsIterator = storeURLs.iterator();
 		ExecutorService executor = Executors.newFixedThreadPool(8);
-		while(ir.hasNext()) {
-			String temp = ir.next().toString();
-			URL storeURL = new URL(temp);
-			Storing store = new FileSystem(storeURL);
-			executor.execute((Runnable) store);
+		int executorShutdownFlag = 0;
+		while(storeURLsIterator.hasNext() || !executor.isTerminated()){
+			if(storeURLsIterator.hasNext()) {
+				String temp = storeURLsIterator.next().toString();
+				URL storeURL = new URL(temp);
+				Storing store = new FileSystem(storeURL);
+				executor.execute((Runnable) store);
+			}
+			else if(executorShutdownFlag == 0) {
+				executorShutdownFlag = 1;
+				executor.shutdown();
+			}
 		}
-		executor.shutdown();  
-		while (!executor.isTerminated()) {   }  	
+		} 	
 	}
 
-}
+
 
 
 

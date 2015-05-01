@@ -17,11 +17,11 @@ import com.pramati.crawling.MailParser;
 public class MailParserImpl extends Client implements MailParser {
 	
 	private ArrayList<String> storeURLs = new ArrayList<String>();
-	static final Logger LOGGER = Logger.getLogger(MailParserImpl.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(MailParserImpl.class.getName());
 	
 	public ArrayList<String> getMailURLs(URL url, String year) throws FailingHttpStatusCodeException, IOException
 	{
-		HtmlPage currentPage=webClient.getPage("http://mail-archives.apache.org/mod_mbox/maven-users/");
+		HtmlPage currentPage=WEBCLIENT.getPage("http://mail-archives.apache.org/mod_mbox/maven-users/");
 		List<?> targerURLs = currentPage.getByXPath("//a[@href]");
 		Iterator<?> ir=targerURLs.iterator();
 		while(ir.hasNext())
@@ -43,13 +43,13 @@ public class MailParserImpl extends Client implements MailParser {
 		}
 		try {
 			HtmlPage tempPage;
-			tempPage = webClient.getPage(url);
+			tempPage = WEBCLIENT.getPage(url);
 			int noOfPages = tempPage.getByXPath("//a[@onclick and @href = 'browser']").size()-3;
 			for(int i=0;i<noOfPages;i++){
 				if (LOGGER.isLoggable(Level.INFO)){
 					LOGGER.info("The total nuber of pages in"+url+" are"+noOfPages);				
 				}
-				tempPage = webClient.getPage(url.toString().replace("browser", "thread?"+i));
+				tempPage = WEBCLIENT.getPage(url.toString().replace("browser", "thread?"+i));
 				List<?> mailURLs = tempPage.getByXPath("//a[starts-with(@href, '%3c')]");
 				Iterator<?> mailURLsIterator = mailURLs.iterator();
 				while(mailURLsIterator.hasNext()) {
@@ -59,12 +59,12 @@ public class MailParserImpl extends Client implements MailParser {
 			}
 		} 
 		catch (FailingHttpStatusCodeException e) {
-			if (LOGGER.isLoggable(Level.INFO)) {
-				LOGGER.severe("I got exception"+e);
-		    }
+			if (LOGGER.isLoggable(Level.INFO)){
+				LOGGER.severe(e.toString());
+			}
 		} catch (IOException e) {
 			if (LOGGER.isLoggable(Level.INFO)){
-				LOGGER.severe("I got exception"+e);
+				LOGGER.severe(e.toString());
 			}
 		}
 	}
@@ -85,11 +85,11 @@ public class MailParserImpl extends Client implements MailParser {
 				LOGGER.info("Found mailurl as "+WebClient.expandUrl(xmlURL,tempString.toString()).toString());
 			}
 			constructedMailURL = WebClient.expandUrl(xmlURL,tempString.toString()).toString();
-		} catch (MalformedURLException e) {
+		} catch (MalformedURLException e){
 			if (LOGGER.isLoggable(Level.INFO)){
-				LOGGER.severe("I got exception"+e);
-			
-			}		}
+				LOGGER.severe(e.toString());
+			}
+		}
 		return constructedMailURL;
 	}
 }
