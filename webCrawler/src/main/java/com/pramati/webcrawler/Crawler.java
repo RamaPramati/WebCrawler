@@ -18,8 +18,8 @@ import com.pramati.crawling.Storing;
 public class Crawler 
 {
 	private MailParser checkCondition;
-	private static URL url;
-	private final String year;
+	private String year;
+	private URL url;
 	
 	private static final Logger LOGGER = Logger.getLogger(Crawler.class.getName());
 
@@ -38,8 +38,7 @@ public class Crawler
 			} 		
 			try {
 				MailParser condtion=new MailParserImpl();
-				url = new URL("http://mail-archives.apache.org/mod_mbox/maven-users/"); 
-				Crawler crawler = new Crawler(url,"2014",condtion);
+				Crawler crawler = new Crawler("http://mail-archives.apache.org/mod_mbox/maven-users/","2014",condtion);
 				crawler.crawlURL();
 			} catch (FailingHttpStatusCodeException e) {
 				if (LOGGER.isLoggable(Level.INFO)){
@@ -59,13 +58,14 @@ public class Crawler
 		LOGGER.info("Crawling success");
 	}
 	
-	public Crawler(URL url, String year, MailParser condition) throws FailingHttpStatusCodeException, MalformedURLException {
+	public Crawler(String url, String year, MailParser condition) throws FailingHttpStatusCodeException, MalformedURLException {
+		this.url = new URL(url);
 		this.year = year;
 		checkCondition = condition;
 	}
 
 	public void crawlURL() throws MalformedURLException, IOException {
-		ArrayList<String> storeURLs = checkCondition.getMailURLs(url, year);
+		ArrayList<String> storeURLs = (ArrayList<String>) checkCondition.getMailURLs(url, year);
 		Iterator<String> storeURLsIterator = storeURLs.iterator();
 		ExecutorService executor = Executors.newFixedThreadPool(8);
 		int executorShutdownFlag = 0;

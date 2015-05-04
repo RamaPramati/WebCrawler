@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
@@ -21,18 +22,20 @@ public class MailParserImpl extends Client implements MailParser {
 	
 	public ArrayList<String> getMailURLs(URL url, String year) throws FailingHttpStatusCodeException, IOException
 	{
-		HtmlPage currentPage=WEBCLIENT.getPage("http://mail-archives.apache.org/mod_mbox/maven-users/");
+		HtmlPage currentPage=WEBCLIENT.getPage(url);
 		List<?> targerURLs = currentPage.getByXPath("//a[@href]");
-		Iterator<?> ir=targerURLs.iterator();
-		while(ir.hasNext())
+		Iterator<?> targerURLsIterator=targerURLs.iterator();
+		StringBuilder tempString=new StringBuilder();
+		char temp[]=new char[20];
+		while(targerURLsIterator.hasNext())
 		{
-			String element=ir.next().toString();
-			char dst[]=new char[20];
+			String element=targerURLsIterator.next().toString();
 			if(element.contains(year)){
-				element.getChars(20, 39, dst, 0);
-				StringBuilder tempString=new StringBuilder().append(dst);
+				element.getChars(20, 39, temp, 0);
+				tempString=tempString.append(temp);
 				parseForMailURLS(WebClient.expandUrl(url,tempString.toString()));
 			}
+			tempString.setLength(0);
 		}
 		return storeURLs;
 	}

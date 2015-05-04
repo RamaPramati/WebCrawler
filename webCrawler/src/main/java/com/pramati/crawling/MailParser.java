@@ -2,10 +2,10 @@ package com.pramati.crawling;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
+import java.util.List;
 
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 
 public interface MailParser {
-	 ArrayList<String> getMailURLs(URL url, String year) throws FailingHttpStatusCodeException, IOException;
+	 List<String> getMailURLs(URL url, String year) throws FailingHttpStatusCodeException, IOException;
 }
