@@ -2,7 +2,7 @@ package com.pramati.crawling;
 
 import java.io.IOException;
 
-public interface Storing {
+public interface Storer {
 
 	 void run() throws IOException;
 

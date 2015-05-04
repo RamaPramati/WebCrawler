@@ -8,17 +8,17 @@ import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.pramati.crawling.Storing;
+import com.pramati.crawling.Storer;
 import com.gargoylesoftware.htmlunit.TextPage;
 
-public class FileSystem extends Client implements Storing, Runnable {
+public class WritingToFile extends Client implements Storer, Runnable {
 
 	private String threadName;
 	private URL url;
     private static int count=1; 
-	private static final Logger LOGGER = Logger.getLogger(FileSystem.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(WritingToFile.class.getName());
     
-	public FileSystem(URL url){
+	public WritingToFile(URL url){
 		super();
 		this.url=url;
 		this.threadName=String.valueOf(count);

@@ -13,13 +13,13 @@ import static org.junit.Assert.*;
 
 public class MailParserImplTest {
 	
-	private static final Logger LOGGER = Logger.getLogger(FileSystem.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(WritingToFile.class.getName());
 
 	@Test
 	public void getMailURLsTest(){
-		final MailParserImpl fixture = new MailParserImpl();
+		final ConditionChecker fixture = new ConditionChecker();
 		try {
-			assertEquals(3244, fixture.getMailURLs(new URL("http://mail-archives.apache.org/mod_mbox/maven-users/"), "2014").size());
+			assertEquals(3244, fixture.getURLs(new URL("http://mail-archives.apache.org/mod_mbox/maven-users/"), "2014").size());
 		} catch (FailingHttpStatusCodeException e) {
 			if (LOGGER.isLoggable(Level.INFO)){
 				LOGGER.severe(e.toString());

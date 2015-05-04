@@ -10,17 +10,19 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import net.sourceforge.htmlunit.corejs.javascript.Undefined;
+
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
-import com.pramati.crawling.MailParser;
+import com.pramati.crawling.Checker;
 
-public class MailParserImpl extends Client implements MailParser {
+public class ConditionChecker extends Client {
 	
 	private ArrayList<String> storeURLs = new ArrayList<String>();
-	private static final Logger LOGGER = Logger.getLogger(MailParserImpl.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(ConditionChecker.class.getName());
 	
-	public ArrayList<String> getMailURLs(URL url, String year) throws FailingHttpStatusCodeException, IOException
+	public ArrayList<String> getURLs(URL url, String year) throws FailingHttpStatusCodeException, IOException
 	{
 		HtmlPage currentPage=WEBCLIENT.getPage(url);
 		List<?> targerURLs = currentPage.getByXPath("//a[@href]");
@@ -70,6 +72,30 @@ public class MailParserImpl extends Client implements MailParser {
 				LOGGER.severe(e.toString());
 			}
 		}
+	}
+	
+	public static boolean isRequired(String url) {
+		try {
+			if(url.toString().contains("2014")){
+			HtmlPage currentPage = WEBCLIENT.getPage(url);
+			if(currentPage.toString().startsWith("From"))
+				
+				return true;
+			}
+		} catch (FailingHttpStatusCodeException e) {
+			if (LOGGER.isLoggable(Level.INFO)){
+				LOGGER.severe(e.toString());
+			}
+		} catch (MalformedURLException e) {
+			if (LOGGER.isLoggable(Level.INFO)){
+				LOGGER.severe(e.toString());
+			}		}
+		  catch (IOException e) {
+			if (LOGGER.isLoggable(Level.INFO)){
+					LOGGER.severe(e.toString());
+				}	
+			}
+		return false;
 	}
 
 	private String constructMailURL(URL url, String mailURLIterator){

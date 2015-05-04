@@ -13,14 +13,10 @@ import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
-import com.pramati.crawling.MailParser;
-import com.pramati.crawling.Storing;
+import com.pramati.crawling.Checker;
+import com.pramati.crawling.Storer;
 public class Crawler 
 {
-	private MailParser checkCondition;
-	private String year;
-	private URL url;
-	
 	private static final Logger LOGGER = Logger.getLogger(Crawler.class.getName());
 
 	public static void main(String args[]){
@@ -37,9 +33,7 @@ public class Crawler
 				}
 			} 		
 			try {
-				MailParser condtion=new MailParserImpl();
-				Crawler crawler = new Crawler("http://mail-archives.apache.org/mod_mbox/maven-users/","2014",condtion);
-				crawler.crawlURL();
+				Crawler.crawlURL("http://mail-archives.apache.org/mod_mbox/maven-users/");
 			} catch (FailingHttpStatusCodeException e) {
 				if (LOGGER.isLoggable(Level.INFO)){
 					LOGGER.severe(e.toString());
@@ -47,7 +41,7 @@ public class Crawler
 			} catch (MalformedURLException e) {
 				if (LOGGER.isLoggable(Level.INFO)){
 					LOGGER.severe(e.toString());
-				}
+			}
 			}
 		}
 		catch (IOException e) {
@@ -58,14 +52,20 @@ public class Crawler
 		LOGGER.info("Crawling success");
 	}
 	
-	public Crawler(String url, String year, MailParser condition) throws FailingHttpStatusCodeException, MalformedURLException {
-		this.url = new URL(url);
-		this.year = year;
-		checkCondition = condition;
-	}
-
-	public void crawlURL() throws MalformedURLException, IOException {
-		ArrayList<String> storeURLs = (ArrayList<String>) checkCondition.getMailURLs(url, year);
+	public static void crawlURL(String urlString) throws MalformedURLException, IOException {
+		
+		URL url = new URL(urlString);
+		ArrayList<String> urls = Parser.getURLs(url);
+		ArrayList<String> storeURLs = new ArrayList<String>(); 
+		Iterator<String> urlsIterator = urls.iterator();
+		while(urlsIterator.hasNext()){
+		if(ConditionChecker.isRequired(urlsIterator.next())){
+			storeURLs.add(urlsIterator.next());
+		}
+		else
+			crawlURL(urlsIterator.next());
+		}
+		
 		Iterator<String> storeURLsIterator = storeURLs.iterator();
 		ExecutorService executor = Executors.newFixedThreadPool(8);
 		int executorShutdownFlag = 0;
@@ -73,7 +73,7 @@ public class Crawler
 			if(storeURLsIterator.hasNext()) {
 				String temp = storeURLsIterator.next().toString();
 				URL storeURL = new URL(temp);
-				Storing store = new FileSystem(storeURL);
+				Storer store = new WritingToFile(storeURL);
 				executor.execute((Runnable) store);
 			}
 			else if(executorShutdownFlag == 0) {
@@ -83,7 +83,6 @@ public class Crawler
 		}
 		} 	
 	}
-
 
 
 
