@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -15,13 +16,19 @@ public class WritingToFile extends Client implements Storer, Runnable {
 
 	private String threadName;
 	private URL url;
-    private static int count=1; 
+	private static int count=1; 
 	private static final Logger LOGGER = Logger.getLogger(WritingToFile.class.getName());
-    
-	public WritingToFile(URL url){
+
+	public WritingToFile(String temp){
+
 		super();
-		this.url=url;
-		this.threadName=String.valueOf(count);
+		try {
+			this.url=new URL(temp);
+			this.threadName=String.valueOf(count);
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public void run() {
@@ -29,7 +36,7 @@ public class WritingToFile extends Client implements Storer, Runnable {
 		BufferedWriter output;
 		try {
 			output = new BufferedWriter(new FileWriter(file));
-			final TextPage rbc= WEBCLIENT.getPage(url);
+			final TextPage rbc= webClient.getPage(url);
 			output.write(rbc.getWebResponse().getContentAsString());
 			count++;
 			output.close();
@@ -37,7 +44,7 @@ public class WritingToFile extends Client implements Storer, Runnable {
 		catch (IOException e) {
 			if (LOGGER.isLoggable(Level.INFO)) {
 				LOGGER.severe("I got exception"+e);
-		    }
+			}
 		}
 	}
 
