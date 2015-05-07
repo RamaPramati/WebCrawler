@@ -1,8 +1,6 @@
 package com.pramati.crawling;
 
 import java.io.IOException;
-import java.net.URL;
-import java.util.List;
 
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 

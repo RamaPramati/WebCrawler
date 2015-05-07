@@ -13,7 +13,6 @@ import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
-import com.pramati.crawling.Checker;
 import com.pramati.crawling.Storer;
 public class Crawler extends Client
 {
@@ -49,20 +48,13 @@ public class Crawler extends Client
 				LOGGER.severe(e.toString());
 			}
 		}
-		finally{
-			Iterator<String> storeURLsIterator = storeURLs.iterator();
-			while(storeURLsIterator.hasNext())
-			{
-				System.out.println(storeURLsIterator.next());
-			}
-		}
+
 		LOGGER.info("Crawling success");
 	}
 
 	public static void crawlURL(String urlString) {
 
 		if(ConditionChecker.isMailURL(urlString)){
-			if(urlString.contains("2014"))
 				storeURLs.add(urlString);
 		}
 		else{
@@ -75,10 +67,9 @@ public class Crawler extends Client
 					if(!(parsedURLs.contains(temp)))
 					{
 						parsedURLs.add(temp);
-						if(webClient.getPage(url).getWebResponse().getContentType().compareTo("text/html") == 0)
+						if(WEBCLIENT.getPage(new URL(temp)).getWebResponse().getContentType().compareTo("text/html") == 0)
 							crawlURL(temp);
 					}
-					//System.out.println(temp);
 				}
 			}
 			catch (MalformedURLException e) {
@@ -96,19 +87,31 @@ public class Crawler extends Client
 
 	public static void writeURLsToFile() {
 
-		Iterator<String> storeURLsIterator = storeURLs.iterator();
+		try {Iterator<String> storeURLsIterator = storeURLs.iterator();
 		ExecutorService executor = Executors.newFixedThreadPool(8);
 		int executorShutdownFlag = 0;
 		while(storeURLsIterator.hasNext() || !executor.isTerminated()){
 			if(storeURLsIterator.hasNext()) {
 				String temp = storeURLsIterator.next().toString();
-				Storer store = new WritingToFile(temp);
+				Storer store;
+				
+					store = new WritingToFile(WEBCLIENT.getPage(new URL(temp)));
+				
 				executor.execute((Runnable) store);
 			}
 			else if(executorShutdownFlag == 0) {
 				executorShutdownFlag = 1;
 				executor.shutdown();
 			}
+		}} catch (FailingHttpStatusCodeException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 }

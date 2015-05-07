@@ -2,10 +2,12 @@ package com.pramati.webcrawler;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
+import com.gargoylesoftware.htmlunit.WebClient;
 
 public class ConditionChecker extends Client {
 
@@ -14,7 +16,7 @@ public class ConditionChecker extends Client {
 	public static boolean isMailURL(String url) {
 	
 		try {
-			if((webClient.getPage(url).getWebResponse().getContentType().compareTo("application/xml") == 0) || ((webClient.getPage(url).getWebResponse().getContentType().compareTo("text/plain") == 0)))
+			if((WEBCLIENT.getPage(url).getWebResponse().getContentType().compareTo("application/xml") == 0) || (WEBCLIENT.getPage(url).getWebResponse().getContentType().compareTo("text/plain") == 0))
 				return true;
 		} catch (FailingHttpStatusCodeException e) {
 			if (LOGGER.isLoggable(Level.INFO)){
@@ -29,6 +31,12 @@ public class ConditionChecker extends Client {
 				LOGGER.severe(e.toString());
 			}	
 		}
+		return false;
+	}
+
+	public static boolean isRequiredURL(URL url, String temp) {
+			if((!(temp.startsWith("http://") || temp.startsWith("https://"))) && (url.toString().contains("2014") || (temp.contains("2014"))))
+				return true;
 		return false;
 	}
 
