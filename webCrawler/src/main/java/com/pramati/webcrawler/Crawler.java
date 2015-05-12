@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -19,7 +20,6 @@ public class Crawler extends Client
 	private static final Logger LOGGER = Logger.getLogger(Crawler.class.getName());
 	private static ArrayList<String> storeURLs = new ArrayList<String>(); 
 	private static ArrayList<String> parsedURLs = new ArrayList<String>();
-	public static ArrayList<String> urlsToBeParsed = new ArrayList<String>();
 
 	public static void main(String args[]){
 
@@ -29,7 +29,7 @@ public class Crawler extends Client
 			SimpleFormatter formatterTxt = new SimpleFormatter();
 			fileTxt.setFormatter(formatterTxt);
 			LOGGER.addHandler(fileTxt);
-
+			
 			Crawler.crawlURL("http://mail-archives.apache.org/mod_mbox/maven-users/");
 			Crawler.writeURLsToFile();
 		}
@@ -53,24 +53,33 @@ public class Crawler extends Client
 	}
 
 	public static void crawlURL(String urlString) {
-
-		if(ConditionChecker.isMailURL(urlString)){
-				storeURLs.add(urlString);
+		
+		ArrayList<String> urlsToBeParsed = new ArrayList<String>();
+		if((ConditionChecker.isMailURL(urlString)) && !(storeURLs.contains(urlString) || storeURLs.contains(urlString+"/") || storeURLs.contains(urlString+"/1"))){
+			System.out.println(urlString);	
+			storeURLs.add(urlString);
 		}
 		else{
 			try {
 				URL url = new URL(urlString);
-				Parser.getURLs(url);
+				if(WEBCLIENT.getPage(new URL(urlString)).getWebResponse().getContentType().compareTo("text/html") == 0)
+					urlsToBeParsed.addAll(Parser.getURLs(url));
 				Iterator<String> urlsIterator = urlsToBeParsed.iterator();
 				while(urlsIterator.hasNext()){
 					String temp = urlsIterator.next();
 					if(!(parsedURLs.contains(temp)))
 					{
 						parsedURLs.add(temp);
-						if(WEBCLIENT.getPage(new URL(temp)).getWebResponse().getContentType().compareTo("text/html") == 0)
 							crawlURL(temp);
 					}
 				}
+			}catch (IllegalArgumentException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			catch (ConcurrentModificationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 			catch (MalformedURLException e) {
 				// TODO Auto-generated catch block
@@ -94,9 +103,7 @@ public class Crawler extends Client
 			if(storeURLsIterator.hasNext()) {
 				String temp = storeURLsIterator.next().toString();
 				Storer store;
-				
-					store = new WritingToFile(WEBCLIENT.getPage(new URL(temp)));
-				
+				store = new WritingToFiles(new URL(temp));
 				executor.execute((Runnable) store);
 			}
 			else if(executorShutdownFlag == 0) {

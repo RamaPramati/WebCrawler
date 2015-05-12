@@ -16,7 +16,7 @@ public class ConditionChecker extends Client {
 	public static boolean isMailURL(String url) {
 	
 		try {
-			if((WEBCLIENT.getPage(url).getWebResponse().getContentType().compareTo("application/xml") == 0) || (WEBCLIENT.getPage(url).getWebResponse().getContentType().compareTo("text/plain") == 0))
+			if(WEBCLIENT.getPage(url).getWebResponse().getContentType().compareTo("text/plain") == 0)
 				return true;
 		} catch (FailingHttpStatusCodeException e) {
 			if (LOGGER.isLoggable(Level.INFO)){
@@ -35,7 +35,7 @@ public class ConditionChecker extends Client {
 	}
 
 	public static boolean isRequiredURL(URL url, String temp) {
-			if((!(temp.startsWith("http://") || temp.startsWith("https://"))) && (url.toString().contains("2014") || (temp.contains("2014"))))
+			if((!(temp.startsWith("http://") || temp.startsWith("https://"))) && (url.toString().matches(".*?2014.*?") || (temp.matches(".*?2014.*?"))))
 				return true;
 		return false;
 	}

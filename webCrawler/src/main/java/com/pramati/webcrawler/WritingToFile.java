@@ -81,7 +81,11 @@ public class WritingToFile extends Client implements Storer, Runnable {
 
 		}
 		output.close();
-		}catch (ParserConfigurationException e) {
+		}catch (ClassCastException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		catch (ParserConfigurationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
