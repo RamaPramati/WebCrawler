@@ -29,7 +29,7 @@ public class Crawler extends Client
 			SimpleFormatter formatterTxt = new SimpleFormatter();
 			fileTxt.setFormatter(formatterTxt);
 			LOGGER.addHandler(fileTxt);
-			
+
 			Crawler.crawlURL("http://mail-archives.apache.org/mod_mbox/maven-users/");
 			Crawler.writeURLsToFile();
 		}
@@ -53,9 +53,9 @@ public class Crawler extends Client
 	}
 
 	public static void crawlURL(String urlString) {
-		
+
 		ArrayList<String> urlsToBeParsed = new ArrayList<String>();
-		if((ConditionChecker.isMailURL(urlString)) && !(storeURLs.contains(urlString) || storeURLs.contains(urlString+"/") || storeURLs.contains(urlString+"/1"))){
+		if(ConditionChecker.isMailURL(urlString)){
 			System.out.println(urlString);	
 			storeURLs.add(urlString);
 		}
@@ -70,7 +70,7 @@ public class Crawler extends Client
 					if(!(parsedURLs.contains(temp)))
 					{
 						parsedURLs.add(temp);
-							crawlURL(temp);
+						crawlURL(temp);
 					}
 				}
 			}catch (IllegalArgumentException e) {
@@ -96,30 +96,28 @@ public class Crawler extends Client
 
 	public static void writeURLsToFile() {
 
-		try {Iterator<String> storeURLsIterator = storeURLs.iterator();
-		ExecutorService executor = Executors.newFixedThreadPool(8);
-		int executorShutdownFlag = 0;
-		while(storeURLsIterator.hasNext() || !executor.isTerminated()){
-			if(storeURLsIterator.hasNext()) {
-				String temp = storeURLsIterator.next().toString();
-				Storer store;
-				store = new WritingToFiles(new URL(temp));
-				executor.execute((Runnable) store);
-			}
-			else if(executorShutdownFlag == 0) {
-				executorShutdownFlag = 1;
-				executor.shutdown();
-			}
-		}} catch (FailingHttpStatusCodeException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		try {
+			Iterator<String> storeURLsIterator = storeURLs.iterator();
+			ExecutorService executor = Executors.newFixedThreadPool(8);
+			int executorShutdownFlag = 0;
+			while(storeURLsIterator.hasNext() || !executor.isTerminated()){
+				if(storeURLsIterator.hasNext()) {
+					String temp = storeURLsIterator.next().toString();
+					Storer store;
+					store = new WritingToFiles(new URL(temp));
+					executor.execute((Runnable) store);
+				}
+				else if(executorShutdownFlag == 0) {
+					executorShutdownFlag = 1;
+					executor.shutdown();
+				}
+			}} catch (FailingHttpStatusCodeException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (MalformedURLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} 
 	}
 }
 
