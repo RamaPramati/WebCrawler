@@ -66,14 +66,15 @@ public class Crawler extends WebClientInitializer
 			}
 			else{
 				URL url = new URL(urlString);
-				if(WEBCLIENT.getPage(new URL(urlString)).getWebResponse().getContentType().compareTo("text/html") == 0)
+				if(WEBCLIENT.getPage(new URL(urlString)).getWebResponse().getContentType().compareTo("text/html") == 0){
+					LOGGER.info("Crawling url"+url);
 					urlsToBeParsed.addAll(Parser.getURLs(url, checker));
+				}
 				Iterator<String> urlsIterator = urlsToBeParsed.iterator();
 				while(urlsIterator.hasNext()){
 					String temp = urlsIterator.next();
 					if(!(parsedURLs.contains(temp)))
 					{
-						LOGGER.info("Crawling url"+temp);
 						parsedURLs.add(temp);
 						crawlURL(temp, checker);
 					}
