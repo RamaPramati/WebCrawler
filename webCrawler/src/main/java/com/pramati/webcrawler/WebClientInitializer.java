@@ -6,13 +6,13 @@ import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.NicelyResynchronizingAjaxController;
 import com.gargoylesoftware.htmlunit.WebClient;
 
-public class Client
+public class WebClientInitializer
 {
     public final static WebClient WEBCLIENT=new WebClient(BrowserVersion.FIREFOX_24);;
 	private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 	
 	static {
-		LOGGER.info("I am in Client and initializing the webClient for getting the URL page");
+		LOGGER.info("I am in WebClient and initializing the webClient for getting the URL page");
 		WEBCLIENT.getOptions().setJavaScriptEnabled(true);
 		WEBCLIENT.getOptions().setRedirectEnabled(true);
 		WEBCLIENT.getOptions().setThrowExceptionOnFailingStatusCode(true);

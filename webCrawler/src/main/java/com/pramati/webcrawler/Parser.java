@@ -4,46 +4,50 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import com.pramati.crawling.Checker;
 
 
-public class Parser extends Client{
+public class Parser extends WebClientInitializer{
 
 	private static final Logger LOGGER = Logger.getLogger(Parser.class.getName());
 
-	public static ArrayList<String> getURLs(URL url)
+	public static List<String> getURLs(URL url, Checker checker)
 	{
 
 		ArrayList<String> urlsToBeParsed = new ArrayList<String>();
 
 		try {
 			HtmlPage currentPage = WEBCLIENT.getPage(url);
-			List<HtmlAnchor> targerURLs = (List<HtmlAnchor>) currentPage.getByXPath("//a[@href]");
-			Iterator<HtmlAnchor> targerURLsIterator = targerURLs.iterator();
-			String temp;
-			while(targerURLsIterator.hasNext())
+			List<HtmlAnchor> relativeURLs = (List<HtmlAnchor>) currentPage.getByXPath("//a[@href]");
+			Iterator<HtmlAnchor> relativeURLsIterator = relativeURLs.iterator();
+			String urlString;
+			while(relativeURLsIterator.hasNext())
 			{
-				temp = targerURLsIterator.next().getHrefAttribute();
-				if(ConditionChecker.isRequiredURL(url, temp))
-					urlsToBeParsed.add(WebClient.expandUrl(url, temp.toString()).toString());
+				urlString = relativeURLsIterator.next().getHrefAttribute();
+				if(checker.isParsableAndRequiredURL(url, urlString))
+					urlsToBeParsed.add(WebClient.expandUrl(url, urlString.toString()).toString());
 			}
 		}catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			if (LOGGER.isLoggable(Level.INFO)){
+				LOGGER.severe(e.toString());
+			}
 		}catch (FailingHttpStatusCodeException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			if (LOGGER.isLoggable(Level.INFO)){
+				LOGGER.severe(e.toString());
+			}
 		}catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			if (LOGGER.isLoggable(Level.INFO)){
+				LOGGER.severe(e.toString());
+			}
 		}
 		return urlsToBeParsed;
 	}

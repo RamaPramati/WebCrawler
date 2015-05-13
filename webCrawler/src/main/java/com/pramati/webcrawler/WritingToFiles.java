@@ -12,12 +12,12 @@ import com.gargoylesoftware.htmlunit.TextPage;
 import com.pramati.crawling.Storer;
 
 
-public class WritingToFiles extends Client implements Storer, Runnable {
+public class WritingToFiles extends WebClientInitializer implements Storer, Runnable {
 
 	private String threadName;
 	private static int count=1; 
 	private static final Logger LOGGER = Logger.getLogger(WritingToFiles.class.getName());
-	URL url;
+	private URL url;
 
 	public WritingToFiles(URL url) throws MalformedURLException {
 		super();
